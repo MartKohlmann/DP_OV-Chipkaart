@@ -7,6 +7,7 @@ public class Adres {
     private String straat;
     private String woonplaats;
     private int reizigerId;
+    private Reiziger reiziger;
 
     public Adres(){}
     public Adres(int id, String postcode, String huisnummer, String straat, String woonplaats, int reizigerId) {
@@ -42,15 +43,23 @@ public class Adres {
         return woonplaats;
     }
 
+    public void setReiziger(Reiziger reiziger){
+        this.reiziger = reiziger;
+    }
+
     @Override
     public String toString() {
-        return "Adres{" +
-                "id=" + id +
-                ", postcode='" + postcode + '\'' +
-                ", huisnummer='" + huisnummer + '\'' +
-                ", straat='" + straat + '\'' +
-                ", woonplaats='" + woonplaats + '\'' +
-                ", reizigerId=" + reizigerId +
-                '}';
+        if (reiziger != null){
+            return "Reiziger        {#" +  reiziger.getId() + " " + reiziger.getVoorletters() + ". " + reiziger.getTussenvoegsel() + " "+ reiziger.getAchternaam() + ", " + reiziger.getGeboortedatum() + ", Adres {#" + reizigerId + " " + id + " " + postcode + "}}";
+        } else {
+            return "Adres{" +
+                    "id=" + id +
+                    ", postcode='" + postcode + '\'' +
+                    ", huisnummer='" + huisnummer + '\'' +
+                    ", straat='" + straat + '\'' +
+                    ", woonplaats='" + woonplaats + '\'' +
+                    ", reizigerId=" + reizigerId +
+                    '}';
+        }
     }
 }

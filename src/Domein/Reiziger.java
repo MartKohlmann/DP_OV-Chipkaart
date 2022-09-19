@@ -74,11 +74,18 @@ public class Reiziger {
         }
         return voorletters + " " + tussenvoegsel + " " + achternaam;
     }
+    public void setAdres(Adres a){
+        this.adres = a;
+    }
 
     public String toString() {
         if (tussenvoegsel == null) {
             this.tussenvoegsel = "";
         }
-        return "        #" +  id + ": " + voorletters + ". " + tussenvoegsel + " "+ achternaam + " (" + geboortedatum + ")";
+        if (adres != null){
+            return "Reiziger        {#" +  id + " " + voorletters + ". " + tussenvoegsel + " "+ achternaam + ", " + geboortedatum + ", Adres {#" + adres.getReizigerId() + " " + adres.getId() + " " + adres.getPostcode() + "}}";
+        } else {
+            return "        #" +  id + ": " + voorletters + ". " + tussenvoegsel + " "+ achternaam + " (" + geboortedatum + ")";
+        }
     }
 }

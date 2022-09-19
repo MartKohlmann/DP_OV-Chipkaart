@@ -8,8 +8,8 @@ public class Main {
     public static void main(String[] args) {
         try {
             ReizigerDAOPsql reizigerDAOPsql = new ReizigerDAOPsql(getConnection());
-            AdresDAOPsql adresDAOPsql = new AdresDAOPsql(getConnection());
             testReizigerDAO(reizigerDAOPsql);
+            AdresDAOPsql adresDAOPsql = new AdresDAOPsql(getConnection());
             testAdresDAO(adresDAOPsql);
             closeConnection(getConnection());
         } catch (Exception e) {
