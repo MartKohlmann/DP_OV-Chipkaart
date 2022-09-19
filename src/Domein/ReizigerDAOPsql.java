@@ -21,7 +21,7 @@ public class ReizigerDAOPsql implements ReizigerDAO{
 //                if (Integer.parseInt(myRs.getString("reiziger_id")) ==  Integer.parseInt(myRss.getString("reiziger_id"))){
 //                    reiziger.setAdres()
 //                }
-                Adres adres = adao.findByReiziger(Integer.parseInt(myRs.getString("reiziger_id")));
+                Adres adres = adao.findByReiziger(reiziger.getId());
                 reiziger.setAdres(adres);
                     if (Integer.parseInt(myRs.getString("reiziger_id")) == reiziger.getId()) {
                     return false;
@@ -52,8 +52,8 @@ public class ReizigerDAOPsql implements ReizigerDAO{
             st.setString(3, reiziger.getAchternaam());
             st.setDate(4, reiziger.getGeboortedatum());
             st.setInt(5, reiziger.getId());
-            Adres adres = adao.findByReiziger(reiziger.getId());
-            reiziger.setAdres(adres);
+            adao.update(reiziger.getAdres());
+//            reiziger.setAdres(reiziger.getAdres());
             st.executeUpdate();
             st.close();
             return true;
@@ -64,7 +64,7 @@ public class ReizigerDAOPsql implements ReizigerDAO{
     };
     public boolean delete(Reiziger reiziger){
         try {
-            PreparedStatement st = connection.prepareStatement("DELETE FROM reiziger WHERE reiziger_id = ?");
+            PreparedStatement st = connection.prepareStatement("DELETE FROM reiziger, adres WHERE reiziger_id = ?");
             st.setInt(1, reiziger.getId());
             st.executeUpdate();
             st.close();

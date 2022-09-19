@@ -99,6 +99,7 @@ public class Main {
         System.out.println(adao.findByReiziger(22));
         System.out.println();
         System.out.println(adao.findById(78));
+        System.out.println();
         for (Adres a : adao.findAll()){
             System.out.println( a.toString());
         }

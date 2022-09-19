@@ -78,6 +78,10 @@ public class Reiziger {
         this.adres = a;
     }
 
+    public Adres getAdres() {
+        return adres;
+    }
+
     public String toString() {
         if (tussenvoegsel == null) {
             this.tussenvoegsel = "";
