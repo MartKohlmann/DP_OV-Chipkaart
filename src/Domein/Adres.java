@@ -41,4 +41,16 @@ public class Adres {
     public String getWoonplaats() {
         return woonplaats;
     }
+
+    @Override
+    public String toString() {
+        return "Adres{" +
+                "id=" + id +
+                ", postcode='" + postcode + '\'' +
+                ", huisnummer='" + huisnummer + '\'' +
+                ", straat='" + straat + '\'' +
+                ", woonplaats='" + woonplaats + '\'' +
+                ", reizigerId=" + reizigerId +
+                '}';
+    }
 }
