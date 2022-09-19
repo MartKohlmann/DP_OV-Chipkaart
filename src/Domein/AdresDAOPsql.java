@@ -11,15 +11,14 @@ public class AdresDAOPsql implements AdresDAO{
 
     public AdresDAOPsql(Connection conn) {
         this.connection = conn;
-        this.rdao = new ReizigerDAOPsql(conn);
     }
     public boolean save(Adres adres){
         try {
             Statement myStmt = connection.createStatement();
             ResultSet myRs = myStmt.executeQuery("select adres_id from adres");
             while (myRs.next()) {
-                Reiziger reiziger = rdao.findById(Integer.parseInt(myRs.getString("reiziger_id")));
-                adres.setReiziger(reiziger);
+//                Reiziger reiziger = rdao.findById(Integer.parseInt(myRs.getString("reiziger_id")));
+//                adres.setReiziger(reiziger);
                 if (Integer.parseInt(myRs.getString("adres_id")) == adres.getId()) {
                     return false;
                 }
@@ -96,18 +95,17 @@ public class AdresDAOPsql implements AdresDAO{
     };
     public Adres findByReiziger(int reizigerId){
         try {
-            Statement myStmt = connection.createStatement();
-            ResultSet myRs = myStmt.executeQuery("select * from adres");
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from adres where reiziger_id = ?");
+            preparedStatement.setInt(1, reizigerId);
+            ResultSet myRs = preparedStatement.executeQuery();
             Adres ad = null;
             while (myRs.next()) {
                 if (myRs.getInt("reiziger_id") == (reizigerId)) {
                     ad = new Adres(Integer.parseInt(myRs.getString("adres_id")), myRs.getString("postcode"), myRs.getString("huisnummer"), myRs.getString("straat"), myRs.getString("woonplaats"), Integer.parseInt(myRs.getString("reiziger_id")));
-                    Reiziger reiziger = rdao.findById(Integer.parseInt(myRs.getString("reiziger_id")));
-                    ad.setReiziger(reiziger);
                 }
             }
             myRs.close();
-            myStmt.close();
+            preparedStatement.close();
             return ad;
         } catch (Exception e){
             e.printStackTrace();
@@ -133,4 +131,7 @@ public class AdresDAOPsql implements AdresDAO{
         }
         return null;
     };
+    public void setRdao(ReizigerDAO rdao) {
+        this.rdao = rdao;
+    }
 }

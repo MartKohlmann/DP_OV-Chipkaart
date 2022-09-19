@@ -50,7 +50,11 @@ public class Adres {
     @Override
     public String toString() {
         if (reiziger != null){
-            return "Reiziger        {#" +  reiziger.getId() + " " + reiziger.getVoorletters() + ". " + reiziger.getTussenvoegsel() + " "+ reiziger.getAchternaam() + ", " + reiziger.getGeboortedatum() + ", Adres {#" + reizigerId + " " + id + " " + postcode + "}}";
+            String tussenvoegsel= reiziger.getTussenvoegsel();
+            if (tussenvoegsel == null) {
+                tussenvoegsel = "";
+            }
+            return "Reiziger        {#" +  reiziger.getId() + " " + reiziger.getVoorletters() + ". " + tussenvoegsel + " "+ reiziger.getAchternaam() + ", " + reiziger.getGeboortedatum() + ", Adres {#" + reizigerId + " " + id + " " + postcode + "}}";
         } else {
             return "Adres{" +
                     "id=" + id +

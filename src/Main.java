@@ -8,8 +8,10 @@ public class Main {
     public static void main(String[] args) {
         try {
             ReizigerDAOPsql reizigerDAOPsql = new ReizigerDAOPsql(getConnection());
-            testReizigerDAO(reizigerDAOPsql);
             AdresDAOPsql adresDAOPsql = new AdresDAOPsql(getConnection());
+            reizigerDAOPsql.setAdao(adresDAOPsql);
+            adresDAOPsql.setRdao(reizigerDAOPsql);
+            testReizigerDAO(reizigerDAOPsql);
             testAdresDAO(adresDAOPsql);
             closeConnection(getConnection());
         } catch (Exception e) {
@@ -95,7 +97,10 @@ public class Main {
 
         adao.delete(a2);
         System.out.println(adao.findByReiziger(22));
-        System.out.println(adao.findAll());
+        System.out.println();
         System.out.println(adao.findById(78));
+        for (Adres a : adao.findAll()){
+            System.out.println( a.toString());
+        }
     }
 }
