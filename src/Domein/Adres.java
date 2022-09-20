@@ -47,7 +47,6 @@ public class Adres {
         this.reiziger = reiziger;
     }
 
-    @Override
     public String toString() {
         if (reiziger != null){
             String tussenvoegsel= reiziger.getTussenvoegsel();
