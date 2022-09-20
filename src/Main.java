@@ -9,15 +9,22 @@ public class Main {
         try {
             ReizigerDAOPsql reizigerDAOPsql = new ReizigerDAOPsql(getConnection());
             AdresDAOPsql adresDAOPsql = new AdresDAOPsql(getConnection());
+            OVChipkaartDAOPsql ovChipkaartDAOPsql = new OVChipkaartDAOPsql(getConnection());
+            ovChipkaartDAOPsql.setRdao(reizigerDAOPsql);
+            reizigerDAOPsql.setOvdao(ovChipkaartDAOPsql);
             reizigerDAOPsql.setAdao(adresDAOPsql);
             adresDAOPsql.setRdao(reizigerDAOPsql);
             testReizigerDAO(reizigerDAOPsql);
             testAdresDAO(adresDAOPsql);
+            testOVChipkaartDAO(ovChipkaartDAOPsql);
             closeConnection(getConnection());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+
+
     private static Connection getConnection() throws SQLException {
         if (connection == null) {
             Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/ovchip", "postgres", "MartKohlmann");
@@ -69,7 +76,7 @@ public class Main {
     private static void testAdresDAO(AdresDAOPsql adao) throws SQLException {
         System.out.println("\n---------- Test AdresDAO -------------");
 
-        // Haal alle reizigers op uit de database
+        // Haal alle adressen op uit de database
         List<Adres> adresList = adao.findAll();
         System.out.println("[Test] AdresDAO.findAll() geeft de volgende adressen:");
         for (Adres a : adresList) {
@@ -77,7 +84,7 @@ public class Main {
         }
         System.out.println();
 
-        // Maak een nieuwe reiziger aan en persisteer deze in de database
+        // Maak een nieuw adres aan en persisteer deze in de database
         Adres a2 = new Adres(77, "1234GB", "23", "Jan de Lange Laan", "Gelderen", 17);
         Adres a3 = new Adres(78, "2342EX", "1", "Jan de Hoge Laan", "Dongen", 22);
         Adres a4 = new Adres(79, "1231EG", "16", "Jan de Korte Laan", "Frederin", 77);
@@ -101,6 +108,40 @@ public class Main {
         System.out.println(adao.findById(78));
         System.out.println();
         for (Adres a : adao.findAll()){
+            System.out.println( a.toString());
+        }
+    }
+    private static void testOVChipkaartDAO(OVChipkaartDAOPsql ovChipkaartDAOPsql) throws SQLException {
+        System.out.println("\n---------- Test OVChipkaartDAO -------------");
+
+        // Haal alle ovchipkaarten op uit de database
+        List<OVChipkaart> ovChipkaarten = ovChipkaartDAOPsql.findAll();
+        System.out.println("[Test] OVChipkaartDAO.findAll() geeft de volgende chipkaarten:");
+        for (OVChipkaart a : ovChipkaarten) {
+            System.out.println(a);
+        }
+        System.out.println();
+
+        // Maak een nieuw ovchipkaart aan en persisteer deze in de database
+        OVChipkaart ov1 = new OVChipkaart(12345, java.sql.Date.valueOf("2022-08-09"), 2, 30.00, 5);
+        ovChipkaartDAOPsql.save(ov1);
+        OVChipkaart ov2 = new OVChipkaart(54321, java.sql.Date.valueOf("2022-08-10"), 1, 15.00, 4);
+        OVChipkaart ov3 = new OVChipkaart(69693, java.sql.Date.valueOf("2022-07-09"), 1, 35.00, 3);
+        ovChipkaartDAOPsql.save(ov3);
+        System.out.print("[Test] Eerst " + ovChipkaarten.size() + " ovchipkaarten, na OVChipkaart.save() ");
+        ovChipkaartDAOPsql.save(ov2);
+        ovChipkaarten = ovChipkaartDAOPsql.findAll();
+        System.out.println(ovChipkaarten.size() + " ovchipkaarten\n");
+
+        // Voeg aanvullende tests van de ontbrekende CRUD-operaties in.
+        OVChipkaart ov4 = new OVChipkaart(69693, java.sql.Date.valueOf("2022-07-09"), 1, 50.00, 3);
+        ovChipkaartDAOPsql.update(ov4);
+
+        ovChipkaartDAOPsql.delete(ov2);
+        System.out.println(ovChipkaartDAOPsql.findById(69693));
+        System.out.println();
+        System.out.println();
+        for (OVChipkaart a : ovChipkaartDAOPsql.findAll()){
             System.out.println( a.toString());
         }
     }

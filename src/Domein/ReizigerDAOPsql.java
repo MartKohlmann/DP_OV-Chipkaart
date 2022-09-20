@@ -8,6 +8,7 @@ import java.util.Objects;
 public class ReizigerDAOPsql implements ReizigerDAO{
     private Connection connection;
     private AdresDAO adao;
+    private OVChipkaartDAO ovdao;
 
     public ReizigerDAOPsql(Connection conn) {
         this.connection = conn;
@@ -145,5 +146,9 @@ public class ReizigerDAOPsql implements ReizigerDAO{
     };
     public void setAdao(AdresDAO adao){
         this.adao = adao;
+    }
+
+    public void setOvdao(OVChipkaartDAO ovdao) {
+        this.ovdao = ovdao;
     }
 }
