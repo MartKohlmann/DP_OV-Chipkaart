@@ -47,6 +47,10 @@ public class Adres {
         this.reiziger = reiziger;
     }
 
+    public Reiziger getReiziger() {
+        return reiziger;
+    }
+
     public String toString() {
         if (reiziger != null){
             String tussenvoegsel= reiziger.getTussenvoegsel();

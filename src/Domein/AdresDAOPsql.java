@@ -23,7 +23,6 @@ public class AdresDAOPsql implements AdresDAO{
                     return false;
                 }
             }
-
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO adres (adres_id, postcode, huisnummer, straat, woonplaats, reiziger_id) VALUES (?, ?, ?, ?, ?, ?)");
             preparedStatement.setInt(1, adres.getId());
             preparedStatement.setString(2, adres.getPostcode());
@@ -50,8 +49,6 @@ public class AdresDAOPsql implements AdresDAO{
             st.setString(4, adres.getWoonplaats());
             st.setInt(5, adres.getReizigerId());
             st.setInt(6, adres.getId());
-            Reiziger reiziger = rdao.findById(adres.getReizigerId());
-            adres.setReiziger(reiziger);
             st.executeUpdate();
             st.close();
             return true;
@@ -64,8 +61,6 @@ public class AdresDAOPsql implements AdresDAO{
         try {
             PreparedStatement st = connection.prepareStatement("DELETE FROM adres WHERE adres_id = ?");
             st.setInt(1, adres.getId());
-            Reiziger reiziger = rdao.findById(adres.getReizigerId());
-            adres.setReiziger(reiziger);
             st.executeUpdate();
             st.close();
             return true;
@@ -102,6 +97,7 @@ public class AdresDAOPsql implements AdresDAO{
             while (myRs.next()) {
                 if (myRs.getInt("reiziger_id") == (reizigerId)) {
                     ad = new Adres(Integer.parseInt(myRs.getString("adres_id")), myRs.getString("postcode"), myRs.getString("huisnummer"), myRs.getString("straat"), myRs.getString("woonplaats"), Integer.parseInt(myRs.getString("reiziger_id")));
+                    ad.setReiziger(rdao.findById(reizigerId));
                 }
             }
             myRs.close();

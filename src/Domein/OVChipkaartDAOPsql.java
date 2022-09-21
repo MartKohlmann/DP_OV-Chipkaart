@@ -21,8 +21,6 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
 //                if (Integer.parseInt(myRs.getString("reiziger_id")) ==  Integer.parseInt(myRss.getString("reiziger_id"))){
 //                    reiziger.setAdres()
 //                }
-                Reiziger reiziger = rdao.findById(ovChipkaart.getReizigerId());
-                ovChipkaart.setReiziger(reiziger);
                 if (Integer.parseInt(myRs.getString("kaart_nummer")) == ovChipkaart.getKaartnummer()) {
                     return false;
                 }
@@ -53,7 +51,6 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
             st.setInt(4, ovChipkaart.getReizigerId());
             st.setInt(5, ovChipkaart.getKaartnummer());
             ovChipkaart.setReiziger(rdao.findById(ovChipkaart.getReizigerId()));
-            rdao.update(ovChipkaart.getReiziger());
 //            reiziger.setAdres(reiziger.getAdres());
             st.executeUpdate();
             st.close();

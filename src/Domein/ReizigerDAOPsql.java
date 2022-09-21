@@ -89,24 +89,23 @@ public class ReizigerDAOPsql implements ReizigerDAO{
     public Reiziger findById(int id) {
         try {
             Statement myStmt = connection.createStatement();
-            ResultSet myRs = myStmt.executeQuery("select * from reiziger");
+            PreparedStatement st = connection.prepareStatement("select * from reiziger where reiziger_id = ?");
+            st.setInt(1, id);
+            ResultSet myRs = st.executeQuery();
             while (myRs.next()) {
-                if (Objects.equals(myRs.getString("reiziger_id"), String.valueOf(id))) {
-                    String tussenvoegsels = myRs.getString("tussenvoegsel");
-                    if (tussenvoegsels == null) {
-                        tussenvoegsels = "";
-                    }
-                    Reiziger reiziger = new Reiziger(Integer.parseInt(myRs.getString("reiziger_id")), myRs.getString("voorletters"), myRs.getString("tussenvoegsel"), myRs.getString("achternaam"), Date.valueOf(myRs.getString("geboortedatum")));
+                Reiziger reiziger = new Reiziger(myRs.getInt("reiziger_id"), myRs.getString("voorletters"), myRs.getString("tussenvoegsel"), myRs.getString("achternaam"), myRs.getDate("geboortedatum"));
+
+                myRs.close();
+                myStmt.close();
+                return reiziger;
+            }
+
 //                    Adres adres = adao.findByReiziger(Integer.parseInt(myRs.getString("reiziger_id")));
 //                    reiziger.setAdres(adres);
 //                    if (reiziger.getAdres() != null) {
 //                        reiziger.setAdres(adao.findByReiziger(id));
 //                    }
-                    return reiziger;
-                }
-            }
-            myRs.close();
-            myStmt.close();
+
         } catch (Exception e){
                 e.printStackTrace();
             }
@@ -115,18 +114,20 @@ public class ReizigerDAOPsql implements ReizigerDAO{
     public List<Reiziger> findByGbdatum(String datum){
         try {
             Statement myStmt = connection.createStatement();
-            ResultSet myRs = myStmt.executeQuery("select * from reiziger");
-
+            PreparedStatement st = connection.prepareStatement("select * from reiziger where geboortedatum = ?");
             Date date = java.sql.Date.valueOf(datum);
+            st.setDate(1, date);
+            ResultSet myRs = st.executeQuery();
             List<Reiziger> reizigers = new ArrayList<>();
             while (myRs.next()) {
-                if (myRs.getDate("geboortedatum").equals(date)) {
-                    Reiziger reiziger = new Reiziger(Integer.parseInt(myRs.getString("reiziger_id")), myRs.getString("voorletters"), myRs.getString("tussenvoegsel"), myRs.getString("achternaam"), Date.valueOf(myRs.getString("geboortedatum")));
+                Reiziger reiziger = new Reiziger(myRs.getInt("reiziger_id"), myRs.getString("voorletters"), myRs.getString("tussenvoegsel"), myRs.getString("achternaam"), myRs.getDate("geboortedatum"));
 //                    Adres adres = adao.findByReiziger(Integer.parseInt(myRs.getString("reiziger_id")));
-                    reiziger.setAdres(adao.findByReiziger(reiziger.getId()));
-                    reizigers.add(reiziger);
-                }
+                reiziger.setAdres(adao.findByReiziger(reiziger.getId()));
+                reizigers.add(reiziger);
             }
+
+
+
             myRs.close();
             myStmt.close();
             return reizigers;
