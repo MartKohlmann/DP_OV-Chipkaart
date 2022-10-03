@@ -8,6 +8,7 @@ import java.util.Objects;
 public class OVChipkaartDAOPsql implements OVChipkaartDAO{
     private Connection connection;
     private ReizigerDAO rdao;
+    private ProductDAO pdao;
 
     public OVChipkaartDAOPsql(Connection conn) {
         this.connection = conn;
@@ -32,6 +33,12 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
             preparedStatement.setDouble(4, ovChipkaart.getSaldo());
             preparedStatement.setInt(5, ovChipkaart.getReiziger().getId());
             preparedStatement.executeUpdate();
+            if (!ovChipkaart.getProductList().isEmpty()) {
+                for (Product product : ovChipkaart.getProductList()) {
+                    product.voegOVChipkaartToe(ovChipkaart);
+                    pdao.save(product);
+                }
+            }
             myRs.close();
             myStmt.close();
             preparedStatement.close();
@@ -52,6 +59,22 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
             st.setInt(5, ovChipkaart.getKaartnummer());
             ovChipkaart.setReiziger(rdao.findById(ovChipkaart.getReizigerId()));
 //            reiziger.setAdres(reiziger.getAdres());
+            if (!ovChipkaart.getProductList().isEmpty()){
+                for (Product product : ovChipkaart.getProductList()){
+                    if (!product.getOvChipkaartList().isEmpty()){
+                        for (OVChipkaart ov : product.getOvChipkaartList()){
+                            if (ov.getKaartnummer() == ovChipkaart.getKaartnummer() && ov != ovChipkaart) {
+                                product.verwijderOVChipkaart(ov);
+                                product.voegOVChipkaartToe(ovChipkaart);
+                                pdao.update(product);
+                            }
+                        }
+                    }
+                    else {
+                        product.voegOVChipkaartToe(ovChipkaart);
+                    }
+                }
+            }
             st.executeUpdate();
             st.close();
             return true;
@@ -116,5 +139,9 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
 
     public void setRdao(ReizigerDAO rdao) {
         this.rdao = rdao;
+    }
+
+    public void setPdao(ProductDAO pdao) {
+        this.pdao = pdao;
     }
 }

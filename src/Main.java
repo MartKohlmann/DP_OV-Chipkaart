@@ -10,13 +10,17 @@ public class Main {
             ReizigerDAOPsql reizigerDAOPsql = new ReizigerDAOPsql(getConnection());
             AdresDAOPsql adresDAOPsql = new AdresDAOPsql(getConnection());
             OVChipkaartDAOPsql ovChipkaartDAOPsql = new OVChipkaartDAOPsql(getConnection());
+            ProductDAOPsql productDAOPsql = new ProductDAOPsql(getConnection());
             ovChipkaartDAOPsql.setRdao(reizigerDAOPsql);
+            ovChipkaartDAOPsql.setPdao(productDAOPsql);
             reizigerDAOPsql.setOvdao(ovChipkaartDAOPsql);
             reizigerDAOPsql.setAdao(adresDAOPsql);
             adresDAOPsql.setRdao(reizigerDAOPsql);
+            productDAOPsql.setOvdao(ovChipkaartDAOPsql);
             testReizigerDAO(reizigerDAOPsql);
             testAdresDAO(adresDAOPsql);
             testOVChipkaartDAO(ovChipkaartDAOPsql);
+            testProductDAO(productDAOPsql);
             closeConnection(getConnection());
         } catch (Exception e) {
             e.printStackTrace();
@@ -142,6 +146,44 @@ public class Main {
         System.out.println();
         System.out.println();
         for (OVChipkaart a : ovChipkaartDAOPsql.findAll()){
+            System.out.println( a.toString());
+        }
+    }
+    private static void testProductDAO(ProductDAOPsql productDAOPsql) throws SQLException {
+        System.out.println("\n---------- Test ProductDAO -------------");
+
+        // Haal alle producten op uit de database
+//        List<Product> productList = productDAOPsql.findAll();
+        System.out.println("[Test] AdresDAO.findAll() geeft de volgende adressen:");
+//        for (Adres a : adresList) {
+//            System.out.println(a);
+//        }
+        System.out.println();
+
+        // Maak een nieuw adres aan en persisteer deze in de database
+        Adres a2 = new Adres(77, "1234GB", "23", "Jan de Lange Laan", "Gelderen", 17);
+        Adres a3 = new Adres(78, "2342EX", "1", "Jan de Hoge Laan", "Dongen", 22);
+        Adres a4 = new Adres(79, "1231EG", "16", "Jan de Korte Laan", "Frederin", 77);
+
+
+        adao.save(a2);
+        adao.save(a4);
+
+        System.out.print("[Test] Eerst " + adresList.size() + " adresList, na AdresDAO.save() ");
+        adao.save(a3);
+        adresList = adao.findAll();
+        System.out.println(adresList.size() + " adresList\n");
+
+        // Voeg aanvullende tests van de ontbrekende CRUD-operaties in.
+        Adres a5 = new Adres(79, "1231EG", "18", "Jan de Korte Laan", "Frederin", 77);
+        adao.update(a5);
+
+        adao.delete(a2);
+        System.out.println(adao.findByReiziger(22));
+        System.out.println();
+        System.out.println(adao.findById(78));
+        System.out.println();
+        for (Adres a : adao.findAll()){
             System.out.println( a.toString());
         }
     }

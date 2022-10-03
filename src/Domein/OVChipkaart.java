@@ -1,6 +1,7 @@
 package Domein;
 
 import java.util.Date;
+import java.util.List;
 
 public class OVChipkaart {
     private int kaartnummer;
@@ -9,6 +10,7 @@ public class OVChipkaart {
     private double saldo;
     private int reizigerId;
     private Reiziger reiziger;
+    private List<Product> productList;
 
     public OVChipkaart(){}
     public OVChipkaart(int kaartnummer, Date geldigTot, int klasse, double saldo, int reizigerId) {
@@ -45,6 +47,20 @@ public class OVChipkaart {
 
     public void setReiziger(Reiziger reiziger) {
         this.reiziger = reiziger;
+    }
+
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
+    }
+
+    public List<Product> getProductList() {
+        return productList;
+    }
+    public void voegProductToe(Product product) {
+        productList.add(product);
+    }
+    public void verwijderProduct(Product product) {
+        productList.remove(product);
     }
 
     public void setGeldigTot(Date geldigTot) {
