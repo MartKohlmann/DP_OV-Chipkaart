@@ -41,10 +41,31 @@ public class Product {
         return ovChipkaartList;
     }
     public void voegOVChipkaartToe(OVChipkaart ovChipkaart) {
-        ovChipkaartList.add(ovChipkaart);
+        if (!ovChipkaartList.contains(ovChipkaart)) {
+            ovChipkaartList.add(ovChipkaart);
+            if (!ovChipkaart.getProductList().contains(this)){
+                ovChipkaart.voegProductToe(this);
+            }
+        }
     }
     public void verwijderOVChipkaart(OVChipkaart ovChipkaart) {
         ovChipkaartList.remove(ovChipkaart);
+    }
+
+    public void setNaam(String naam) {
+        this.naam = naam;
+    }
+
+    public void setBeschrijving(String beschrijving) {
+        this.beschrijving = beschrijving;
+    }
+
+    public void setPrijs(double prijs) {
+        this.prijs = prijs;
+    }
+
+    public void setProduct_nummer(int product_nummer) {
+        this.product_nummer = product_nummer;
     }
 
     public String toString() {
@@ -52,10 +73,10 @@ public class Product {
             String s = "";
             for (OVChipkaart ovChipkaart : ovChipkaartList) {
                 s += "         " + ovChipkaart;
-                System.out.println(ovChipkaart);
-                System.out.println("a");
+//                System.out.println(ovChipkaart);
+//                System.out.println("a");
             }
-            System.out.println("hoi");
+//            System.out.println("hoi");
             return "Product{" +
                     "product_nummer=" + product_nummer +
                     ", naam='" + naam + '\'' +
@@ -69,6 +90,17 @@ public class Product {
                     ", beschrijving='" + beschrijving + '\'' +
                     ", prijs=" + prijs +
                     '}';
+        }
+    }
+
+    public void updateOVChipkaart(OVChipkaart ovChipkaart) {
+        for (OVChipkaart ov : ovChipkaartList) {
+            if (!ov.equals(ovChipkaart)) {
+                ov.setKlasse(ovChipkaart.getKlasse());
+                ov.setSaldo(ovChipkaart.getSaldo());
+                ov.setReizigerId(ovChipkaart.getReizigerId());
+                ov.setGeldigTot(ovChipkaart.getGeldigTot());
+            }
         }
     }
 }

@@ -58,7 +58,12 @@ public class OVChipkaart {
         return productList;
     }
     public void voegProductToe(Product product) {
-        productList.add(product);
+        if (!productList.contains(product)) {
+            productList.add(product);
+            if (!product.getOvChipkaartList().contains(this)) {
+                product.voegOVChipkaartToe(this);
+            }
+        }
     }
     public void verwijderProduct(Product product) {
         productList.remove(product);
@@ -78,5 +83,31 @@ public class OVChipkaart {
                 ", reizigerId=" + reizigerId +
                 ", reiziger=" + reiziger +
                 '}';
+    }
+
+    public void setKaartnummer(int kaartnummer) {
+        this.kaartnummer = kaartnummer;
+    }
+
+    public void setKlasse(int klasse) {
+        this.klasse = klasse;
+    }
+
+    public void setReizigerId(int reizigerId) {
+        this.reizigerId = reizigerId;
+    }
+
+    public void setSaldo(double saldo) {
+        this.saldo = saldo;
+    }
+
+    public void updateProduct(Product product) {
+        for (Product p : productList) {
+            if (!p.equals(product)) {
+                p.setNaam(product.getNaam());
+                p.setBeschrijving(product.getBeschrijving());
+                p.setPrijs(product.getPrijs());
+            }
+        }
     }
 }

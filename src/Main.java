@@ -164,11 +164,11 @@ public class Main {
         System.out.println();
 
         // Maak een nieuw product aan en persisteer deze in de database
-        Product a2 = new Product(8, "Studentenkaart", "Door de weeks gratis reizen", 25.00);
+        Product a2 = new Product(8, "Studentenkaart", "Door de weeks gratis reizen", 35.00);
         Product a3 = new Product(9, "Weekendkaart", "Weekend kaart reizen", 27.00);
         Product a4 = new Product(10, "Weekkaart", "Week kaart reizen", 30.00);
         Product a5 = new Product(11, "Dagkaart", "Dag kaart reizen", 10.00);
-        OVChipkaart ov3 = new OVChipkaart(69693, java.sql.Date.valueOf("2022-07-09"), 1, 35.00, 3);
+        OVChipkaart ov3 = new OVChipkaart(69693, java.sql.Date.valueOf("2022-07-09"), 1, 50.00, 3);
 
 
         productDAOPsql.save(a2);
@@ -177,6 +177,10 @@ public class Main {
         a2.voegOVChipkaartToe(ov3);
         System.out.println("a2");
         System.out.println(a2);
+        productDAOPsql.update(a2);
+        for (Product p : productDAOPsql.findAll()) {
+            System.out.println(p);
+        }
         System.out.print("[Test] Eerst " + productList.size() + " producten, na ProductDAO.save() ");
         productDAOPsql.save(a3);
         productList = productDAOPsql.findAll();

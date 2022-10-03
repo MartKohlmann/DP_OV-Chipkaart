@@ -31,14 +31,19 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
             preparedStatement.setDate(2, (Date) ovChipkaart.getGeldigTot());
             preparedStatement.setInt(3, ovChipkaart.getKlasse());
             preparedStatement.setDouble(4, ovChipkaart.getSaldo());
-            preparedStatement.setInt(5, ovChipkaart.getReiziger().getId());
+            preparedStatement.setInt(5, ovChipkaart.getReizigerId());
             preparedStatement.executeUpdate();
             if (!ovChipkaart.getProductList().isEmpty()) {
                 for (Product product : ovChipkaart.getProductList()) {
                     product.voegOVChipkaartToe(ovChipkaart);
+                    PreparedStatement ps = connection.prepareStatement("INSERT INTO ov_chipkaart_product (kaart_nummer, product_nummer) VALUES (?, ?)");
+                    ps.setInt(1, ovChipkaart.getKaartnummer());
+                    ps.setInt(2, product.getProduct_nummer());
+                    ps.executeUpdate();
                     pdao.save(product);
                 }
             }
+
             myRs.close();
             myStmt.close();
             preparedStatement.close();
@@ -61,12 +66,12 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
 //            reiziger.setAdres(reiziger.getAdres());
             if (!ovChipkaart.getProductList().isEmpty()){
                 for (Product product : ovChipkaart.getProductList()){
+
                     if (!product.getOvChipkaartList().isEmpty()){
                         for (OVChipkaart ov : product.getOvChipkaartList()){
-                            if (ov.getKaartnummer() == ovChipkaart.getKaartnummer() && ov != ovChipkaart) {
-                                product.verwijderOVChipkaart(ov);
-                                product.voegOVChipkaartToe(ovChipkaart);
-                                pdao.update(product);
+
+                            if (ov.getKaartnummer() == ovChipkaart.getKaartnummer()) {
+                                product.updateOVChipkaart(ovChipkaart);
                             }
                         }
                     }
@@ -133,8 +138,8 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
                 Reiziger reiziger = rdao.findById(myRs.getInt("reiziger_id"));
                 ovChipkaart.setReiziger(reiziger);
                 for (Product p : pdao.findByOVChipkaart(ovChipkaart)) {
-                    System.out.println("p");
-                    System.out.println(p);
+//                    System.out.println("p");
+//                    System.out.println(p);
                     ovChipkaart.voegProductToe(p);
                 }
                 ovchipkaarten.add(ovChipkaart);

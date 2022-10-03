@@ -39,7 +39,11 @@ public class ProductDAOPsql implements ProductDAO {
             if (!product.getOvChipkaartList().isEmpty()) {
                 for (OVChipkaart ovChipkaart : product.getOvChipkaartList()) {
                     ovChipkaart.voegProductToe(product);
-                    ovdao.save(ovChipkaart);
+                    PreparedStatement ps = connection.prepareStatement("INSERT INTO ov_chipkaart_product (kaart_nummer, product_nummer) VALUES (?, ?)");
+                    ps.setInt(1, ovChipkaart.getKaartnummer());
+                    ps.setInt(2, product.getProduct_nummer());
+                    ps.executeUpdate();
+                    ovdao.update(ovChipkaart);
                 }
             }
             myRs.close();
@@ -61,19 +65,23 @@ public class ProductDAOPsql implements ProductDAO {
 //            if (reiziger.getAdres() != null) {
 //                adao.update(reiziger.getAdres());
 //            }
-
             if (!product.getOvChipkaartList().isEmpty()){
                 for (OVChipkaart ovChipkaart : product.getOvChipkaartList()){
                     if (!ovChipkaart.getProductList().isEmpty()){
                         for (Product p : ovChipkaart.getProductList()){
-                            if (p.getProduct_nummer() == product.getProduct_nummer() && p != product) {
-                                ovChipkaart.verwijderProduct(p);
-                                ovChipkaart.voegProductToe(product);
+                            if (p.getProduct_nummer() == product.getProduct_nummer() && !ovChipkaart.equals(ovdao.findById(ovChipkaart.getKaartnummer())) ) {
+                                ovChipkaart.updateProduct(product);
+                                System.out.println(ovChipkaart.getProductList());
+                                System.out.println(ovdao.findById(ovChipkaart.getKaartnummer()).getProductList());
+                                System.out.println(!ovChipkaart.equals(ovdao.findById(ovChipkaart.getKaartnummer())));
                                 ovdao.update(ovChipkaart);
+
+
                             }
                         }
                     }
                     else {
+                        System.out.println(product);
                         ovChipkaart.voegProductToe(product);
                     }
                 }
@@ -114,22 +122,19 @@ public class ProductDAOPsql implements ProductDAO {
         try {
             Statement myStmt = connection.createStatement();
             List<Product> productList = new ArrayList<>();
-            if (!ovChipkaart.getProductList().isEmpty()){
-                for (Product p : ovChipkaart.getProductList()) {
-                    PreparedStatement preparedStatement = connection.prepareStatement("select * from product WHERE product_nummer = ?");
-                    preparedStatement.setInt(1, p.getProduct_nummer());
+//            if (!ovChipkaart.getProductList().isEmpty()){
+//                for (Product p : ovChipkaart.getProductList()) {
+                    PreparedStatement preparedStatement = connection.prepareStatement("SELECT p.product_nummer, p.naam, p.beschrijving, p.prijs FROM product p INNER JOIN ov_chipkaart_product o ON o.product_nummer = p.product_nummer WHERE o.kaart_nummer = ?");
+                    preparedStatement.setInt(1, ovChipkaart.getKaartnummer());
                     ResultSet myRs = preparedStatement.executeQuery();
                     while (myRs.next()) {
                         Product product = new Product(myRs.getInt("product_nummer"), myRs.getString("naam"), myRs.getString("beschrijving"), myRs.getInt("prijs"));
-//                Adres adres = adao.findByReiziger(Integer.parseInt(myRs.getString("reiziger_id")));
-//                reiziger.setAdres(adres);
                         product.voegOVChipkaartToe(ovChipkaart);
-                        productList.add(product);
+                            productList.add(product);
                     }
                     myRs.close();
-                }
-            }
-
+//                }
+//            }
 
             myStmt.close();
             return productList;
@@ -148,11 +153,15 @@ public class ProductDAOPsql implements ProductDAO {
 //                Adres adres = adao.findByReiziger(Integer.parseInt(myRs.getString("reiziger_id")));
 //                reiziger.setAdres(adres);
                 for (OVChipkaart ovChipkaart : ovdao.findAll()) {
+
                     for (Product p : ovChipkaart.getProductList()){
-                        System.out.println("p");
-                        System.out.println(p);
+//                        System.out.println("p");
+//                        System.out.println(p);
+//                        System.out.println(p.getProduct_nummer());
+//                        System.out.println(product.getProduct_nummer());
                         if (p.getProduct_nummer() == product.getProduct_nummer()) {
                             product.voegOVChipkaartToe(ovChipkaart);
+                            break;
                         }
                     }
                 }
