@@ -73,7 +73,6 @@ public class ProductDAOPsql implements ProductDAO {
                                 ovChipkaart.updateProduct(product);
                                 System.out.println(ovChipkaart.getProductList());
                                 System.out.println(ovdao.findById(ovChipkaart.getKaartnummer()).getProductList());
-                                System.out.println(!ovChipkaart.equals(ovdao.findById(ovChipkaart.getKaartnummer())));
                                 ovdao.update(ovChipkaart);
 
 
