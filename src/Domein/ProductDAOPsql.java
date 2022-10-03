@@ -108,6 +108,7 @@ public class ProductDAOPsql implements ProductDAO {
                     ovChipkaart.verwijderProduct(product);
                 }
             }
+
             st.executeUpdate();
             st.close();
             return true;

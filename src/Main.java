@@ -192,6 +192,7 @@ public class Main {
         }
         Product a7 = new Product(8, "Studentenkaart", "Door de weeks gratis reizen", 35.00);
         productDAOPsql.update(a7);
+        productDAOPsql.delete(a7);
         System.out.println();
         for (Product p : productDAOPsql.findAll()) {
             System.out.println(p);
