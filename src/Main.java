@@ -131,6 +131,9 @@ public class Main {
         ovChipkaartDAOPsql.save(ov1);
         OVChipkaart ov2 = new OVChipkaart(54321, java.sql.Date.valueOf("2022-08-10"), 1, 15.00, 4);
         OVChipkaart ov3 = new OVChipkaart(69693, java.sql.Date.valueOf("2022-07-09"), 1, 35.00, 3);
+        Product a2 = new Product(8, "Studentenkaart", "Door de weeks gratis reizen", 25.00);
+
+        ov3.voegProductToe(a2);
         ovChipkaartDAOPsql.save(ov3);
         System.out.print("[Test] Eerst " + ovChipkaarten.size() + " ovchipkaarten, na OVChipkaart.save() ");
         ovChipkaartDAOPsql.save(ov2);
@@ -153,37 +156,52 @@ public class Main {
         System.out.println("\n---------- Test ProductDAO -------------");
 
         // Haal alle producten op uit de database
-//        List<Product> productList = productDAOPsql.findAll();
-        System.out.println("[Test] AdresDAO.findAll() geeft de volgende adressen:");
-//        for (Adres a : adresList) {
-//            System.out.println(a);
-//        }
+        List<Product> productList = productDAOPsql.findAll();
+        System.out.println("[Test] ProductDAOPsql.findAll() geeft de volgende producten:");
+        for (Product a : productList) {
+            System.out.println(a);
+        }
         System.out.println();
 
-        // Maak een nieuw adres aan en persisteer deze in de database
-        Adres a2 = new Adres(77, "1234GB", "23", "Jan de Lange Laan", "Gelderen", 17);
-        Adres a3 = new Adres(78, "2342EX", "1", "Jan de Hoge Laan", "Dongen", 22);
-        Adres a4 = new Adres(79, "1231EG", "16", "Jan de Korte Laan", "Frederin", 77);
+        // Maak een nieuw product aan en persisteer deze in de database
+        Product a2 = new Product(8, "Studentenkaart", "Door de weeks gratis reizen", 25.00);
+        Product a3 = new Product(9, "Weekendkaart", "Weekend kaart reizen", 27.00);
+        Product a4 = new Product(10, "Weekkaart", "Week kaart reizen", 30.00);
+        Product a5 = new Product(11, "Dagkaart", "Dag kaart reizen", 10.00);
+        OVChipkaart ov3 = new OVChipkaart(69693, java.sql.Date.valueOf("2022-07-09"), 1, 35.00, 3);
 
 
-        adao.save(a2);
-        adao.save(a4);
-
-        System.out.print("[Test] Eerst " + adresList.size() + " adresList, na AdresDAO.save() ");
-        adao.save(a3);
-        adresList = adao.findAll();
-        System.out.println(adresList.size() + " adresList\n");
+        productDAOPsql.save(a2);
+        productDAOPsql.save(a4);
+        productDAOPsql.save(a5);
+        a2.voegOVChipkaartToe(ov3);
+        System.out.println("a2");
+        System.out.println(a2);
+        System.out.print("[Test] Eerst " + productList.size() + " producten, na ProductDAO.save() ");
+        productDAOPsql.save(a3);
+        productList = productDAOPsql.findAll();
+        System.out.println(productList.size() + " producten\n");
 
         // Voeg aanvullende tests van de ontbrekende CRUD-operaties in.
-        Adres a5 = new Adres(79, "1231EG", "18", "Jan de Korte Laan", "Frederin", 77);
-        adao.update(a5);
+        for (Product p : productDAOPsql.findAll()) {
+            System.out.println(p);
+        }
+        Product a7 = new Product(8, "Studentenkaart", "Door de weeks gratis reizen", 35.00);
+        productDAOPsql.update(a7);
+        System.out.println();
+        for (Product p : productDAOPsql.findAll()) {
+            System.out.println(p);
+        }
+        System.out.println();
 
-        adao.delete(a2);
-        System.out.println(adao.findByReiziger(22));
+        productDAOPsql.delete(a4);
+        OVChipkaart ov1 = new OVChipkaart(12345, java.sql.Date.valueOf("2022-08-09"), 2, 30.00, 5);
+
+
         System.out.println();
-        System.out.println(adao.findById(78));
+//        System.out.println(productDAOPsql.findById(78));
         System.out.println();
-        for (Adres a : adao.findAll()){
+        for (Product a : productDAOPsql.findAll()){
             System.out.println( a.toString());
         }
     }

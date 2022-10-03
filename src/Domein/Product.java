@@ -1,5 +1,6 @@
 package Domein;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Product {
@@ -7,7 +8,7 @@ public class Product {
     private String naam;
     private String beschrijving;
     private double prijs;
-    private List<OVChipkaart> ovChipkaartList;
+    private List<OVChipkaart> ovChipkaartList = new ArrayList<>();
 
     public Product(int product_nummer, String naam, String beschrijving, double prijs) {
         this.product_nummer = product_nummer;
@@ -46,13 +47,28 @@ public class Product {
         ovChipkaartList.remove(ovChipkaart);
     }
 
-    @Override
     public String toString() {
-        return "Product{" +
-                "product_nummer=" + product_nummer +
-                ", naam='" + naam + '\'' +
-                ", beschrijving='" + beschrijving + '\'' +
-                ", prijs=" + prijs +
-                '}';
+        if (!ovChipkaartList.isEmpty()) {
+            String s = "";
+            for (OVChipkaart ovChipkaart : ovChipkaartList) {
+                s += "         " + ovChipkaart;
+                System.out.println(ovChipkaart);
+                System.out.println("a");
+            }
+            System.out.println("hoi");
+            return "Product{" +
+                    "product_nummer=" + product_nummer +
+                    ", naam='" + naam + '\'' +
+                    ", beschrijving='" + beschrijving + '\'' +
+                    ", prijs=" + prijs +
+                    '}' + s;
+        } else {
+            return "Product{" +
+                    "product_nummer=" + product_nummer +
+                    ", naam='" + naam + '\'' +
+                    ", beschrijving='" + beschrijving + '\'' +
+                    ", prijs=" + prijs +
+                    '}';
+        }
     }
 }

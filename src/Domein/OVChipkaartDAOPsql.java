@@ -87,6 +87,11 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
         try {
             PreparedStatement st = connection.prepareStatement("DELETE FROM ov_chipkaart WHERE kaart_nummer = ?");
             st.setInt(1, ovChipkaart.getKaartnummer());
+            if (!ovChipkaart.getProductList().isEmpty()) {
+                for (Product product : ovChipkaart.getProductList()) {
+                    product.verwijderOVChipkaart(ovChipkaart);
+                }
+            }
             st.executeUpdate();
             st.close();
             return true;
@@ -104,6 +109,9 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
                     OVChipkaart ovChipkaart = new OVChipkaart(myRs.getInt("kaart_nummer"), myRs.getDate("geldig_tot"), myRs.getInt("klasse"), myRs.getDouble("saldo"), myRs.getInt("reiziger_id"));
                     Reiziger reiziger = rdao.findById(myRs.getInt("reiziger_id"));
                     ovChipkaart.setReiziger(reiziger);
+                    for (Product p : pdao.findByOVChipkaart(ovChipkaart)) {
+                        ovChipkaart.voegProductToe(p);
+                    }
                     return ovChipkaart;
                 }
             }
@@ -124,6 +132,11 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
                 OVChipkaart ovChipkaart = new OVChipkaart(Integer.parseInt(myRs.getString("kaart_nummer")), myRs.getDate("geldig_tot"), myRs.getInt("klasse"), myRs.getDouble("saldo"), myRs.getInt("reiziger_id"));
                 Reiziger reiziger = rdao.findById(myRs.getInt("reiziger_id"));
                 ovChipkaart.setReiziger(reiziger);
+                for (Product p : pdao.findByOVChipkaart(ovChipkaart)) {
+                    System.out.println("p");
+                    System.out.println(p);
+                    ovChipkaart.voegProductToe(p);
+                }
                 ovchipkaarten.add(ovChipkaart);
             }
             myRs.close();

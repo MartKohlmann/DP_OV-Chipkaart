@@ -1,5 +1,6 @@
 package Domein;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,7 +11,7 @@ public class OVChipkaart {
     private double saldo;
     private int reizigerId;
     private Reiziger reiziger;
-    private List<Product> productList;
+    private List<Product> productList = new ArrayList<>();
 
     public OVChipkaart(){}
     public OVChipkaart(int kaartnummer, Date geldigTot, int klasse, double saldo, int reizigerId) {

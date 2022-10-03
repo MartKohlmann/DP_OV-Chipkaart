@@ -114,19 +114,22 @@ public class ProductDAOPsql implements ProductDAO {
         try {
             Statement myStmt = connection.createStatement();
             List<Product> productList = new ArrayList<>();
-            for (Product p : ovChipkaart.getProductList()) {
-                PreparedStatement preparedStatement = connection.prepareStatement("select * from product WHERE product_nummer = ?");
-                preparedStatement.setInt(1, p.getProduct_nummer());
-                ResultSet myRs = preparedStatement.executeQuery();
-                while (myRs.next()) {
-                    Product product = new Product(myRs.getInt("product_nummer"), myRs.getString("naam"), myRs.getString("beschrijving"), myRs.getInt("prijs"));
+            if (!ovChipkaart.getProductList().isEmpty()){
+                for (Product p : ovChipkaart.getProductList()) {
+                    PreparedStatement preparedStatement = connection.prepareStatement("select * from product WHERE product_nummer = ?");
+                    preparedStatement.setInt(1, p.getProduct_nummer());
+                    ResultSet myRs = preparedStatement.executeQuery();
+                    while (myRs.next()) {
+                        Product product = new Product(myRs.getInt("product_nummer"), myRs.getString("naam"), myRs.getString("beschrijving"), myRs.getInt("prijs"));
 //                Adres adres = adao.findByReiziger(Integer.parseInt(myRs.getString("reiziger_id")));
 //                reiziger.setAdres(adres);
-                    product.voegOVChipkaartToe(ovChipkaart);
-                    productList.add(product);
+                        product.voegOVChipkaartToe(ovChipkaart);
+                        productList.add(product);
+                    }
+                    myRs.close();
                 }
-                myRs.close();
             }
+
 
             myStmt.close();
             return productList;
@@ -146,11 +149,16 @@ public class ProductDAOPsql implements ProductDAO {
 //                reiziger.setAdres(adres);
                 for (OVChipkaart ovChipkaart : ovdao.findAll()) {
                     for (Product p : ovChipkaart.getProductList()){
+                        System.out.println("p");
+                        System.out.println(p);
                         if (p.getProduct_nummer() == product.getProduct_nummer()) {
                             product.voegOVChipkaartToe(ovChipkaart);
                         }
                     }
                 }
+//                System.out.println("p1");
+//                System.out.println(product);
+//                System.out.println("p2");
                 productList.add(product);
             }
             myRs.close();
