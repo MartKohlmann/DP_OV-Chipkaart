@@ -1,6 +1,7 @@
 import Domein.*;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -20,7 +21,7 @@ public class Main {
             testReizigerDAO(reizigerDAOPsql);
             testAdresDAO(adresDAOPsql);
             testOVChipkaartDAO(ovChipkaartDAOPsql);
-            testProductDAO(productDAOPsql);
+            testProductDAO(productDAOPsql, adresDAOPsql, ovChipkaartDAOPsql, reizigerDAOPsql);
             closeConnection(getConnection());
         } catch (Exception e) {
             e.printStackTrace();
@@ -152,7 +153,7 @@ public class Main {
             System.out.println( a.toString());
         }
     }
-    private static void testProductDAO(ProductDAOPsql productDAOPsql) throws SQLException {
+    private static void testProductDAO(ProductDAOPsql productDAOPsql, AdresDAOPsql adao, OVChipkaartDAOPsql ovdao, ReizigerDAOPsql rdao) throws SQLException {
         System.out.println("\n---------- Test ProductDAO -------------");
 
         // Haal alle producten op uit de database
@@ -168,46 +169,64 @@ public class Main {
         Product a3 = new Product(9, "Weekendkaart", "Weekend kaart reizen", 27.00);
         Product a4 = new Product(10, "Weekkaart", "Week kaart reizen", 30.00);
         Product a5 = new Product(11, "Dagkaart", "Dag kaart reizen", 10.00);
-        OVChipkaart ov3 = new OVChipkaart(69693, java.sql.Date.valueOf("2022-07-09"), 1, 50.00, 3);
-
+        OVChipkaart ov3 = new OVChipkaart(69696, java.sql.Date.valueOf("2022-07-08"), 1, 50.00, 99);
+        String gbdatum = "1981-03-14";
+        Reiziger a1 = new Reiziger(99, "B", "", "GIETS", java.sql.Date.valueOf(gbdatum));
+        Adres a10 = new Adres(80, "1294GZ", "19", "Jan de KORTE Laan", "UTRECHTEN", 99);
+        List<OVChipkaart> ovChipkaartList = new ArrayList<>();
+        ovChipkaartList.add(ov3);
+        a1.setOvChipkaarten(ovChipkaartList);
+        a1.setAdres(a10);
+        a10.setReiziger(a1);
+        ov3.setReiziger(a1);
+        rdao.save(a1);
+        adao.save(a10);
+        ovdao.save(ov3);
 
         productDAOPsql.save(a2);
         productDAOPsql.save(a4);
         productDAOPsql.save(a5);
+        System.out.println("Product 8 voor het toevoegen van een chipkaart: ");
+        System.out.println(a2);
         a2.voegOVChipkaartToe(ov3);
-        System.out.println("a2");
+        System.out.println();
+        System.out.println("Product 8 na het toevoegen van een chipkaart: ");
         System.out.println(a2);
         productDAOPsql.update(a2);
+        System.out.println("Alle producten na het updaten van product 8 (product 8 heeft nu een chipkaart)");
         for (Product p : productDAOPsql.findAll()) {
             System.out.println(p);
         }
+        System.out.println();
+        System.out.println("Alle producten van chipkaart 35283: ");
+        System.out.println(productDAOPsql.findByOVChipkaart(ovdao.findById(35283)));
+        System.out.println();
+
         System.out.print("[Test] Eerst " + productList.size() + " producten, na ProductDAO.save() ");
         productDAOPsql.save(a3);
         productList = productDAOPsql.findAll();
         System.out.println(productList.size() + " producten\n");
 
         // Voeg aanvullende tests van de ontbrekende CRUD-operaties in.
-        for (Product p : productDAOPsql.findAll()) {
-            System.out.println(p);
-        }
-        Product a7 = new Product(8, "Studentenkaart", "Door de weeks gratis reizen", 35.00);
+
+        System.out.println("Product 8 voor het updaten van de prijs: ");
+        System.out.println(a2);
+        Product a7 = new Product(8, "Studentenkaart", "Door de weeks gratis reizen", 25.00);
         productDAOPsql.update(a7);
-        productDAOPsql.delete(a7);
-        System.out.println();
+        System.out.println("Alle producten na het updaten van product 8 (product 8 heeft nu een andere prijs)");
         for (Product p : productDAOPsql.findAll()) {
             System.out.println(p);
         }
         System.out.println();
-
-        productDAOPsql.delete(a4);
-        OVChipkaart ov1 = new OVChipkaart(12345, java.sql.Date.valueOf("2022-08-09"), 2, 30.00, 5);
-
-
+        System.out.println("Alle producten voor het verwijderen van product 8: ");
+        for (Product p : productDAOPsql.findAll()) {
+            System.out.println(p);
+        }
         System.out.println();
-//        System.out.println(productDAOPsql.findById(78));
-        System.out.println();
-        for (Product a : productDAOPsql.findAll()){
-            System.out.println( a.toString());
+        System.out.println("Alle producten na het verwijderen van product 8: ");
+        productDAOPsql.delete(a7);
+        for (Product p : productDAOPsql.findAll()) {
+            System.out.println(p);
         }
     }
 }

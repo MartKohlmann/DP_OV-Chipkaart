@@ -17,11 +17,7 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
         try {
             Statement myStmt = connection.createStatement();
             ResultSet myRs = myStmt.executeQuery("select kaart_nummer from ov_chipkaart");
-//            ResultSet myRss = myStmt.executeQuery("select * from adres");
             while (myRs.next()) {
-//                if (Integer.parseInt(myRs.getString("reiziger_id")) ==  Integer.parseInt(myRss.getString("reiziger_id"))){
-//                    reiziger.setAdres()
-//                }
                 if (Integer.parseInt(myRs.getString("kaart_nummer")) == ovChipkaart.getKaartnummer()) {
                     return false;
                 }
@@ -63,10 +59,8 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
             st.setInt(4, ovChipkaart.getReizigerId());
             st.setInt(5, ovChipkaart.getKaartnummer());
             ovChipkaart.setReiziger(rdao.findById(ovChipkaart.getReizigerId()));
-//            reiziger.setAdres(reiziger.getAdres());
             if (!ovChipkaart.getProductList().isEmpty()){
                 for (Product product : ovChipkaart.getProductList()){
-
                     if (!product.getOvChipkaartList().isEmpty()){
                         for (OVChipkaart ov : product.getOvChipkaartList()){
 
@@ -138,8 +132,6 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
                 Reiziger reiziger = rdao.findById(myRs.getInt("reiziger_id"));
                 ovChipkaart.setReiziger(reiziger);
                 for (Product p : pdao.findByOVChipkaart(ovChipkaart)) {
-//                    System.out.println("p");
-//                    System.out.println(p);
                     ovChipkaart.voegProductToe(p);
                 }
                 ovchipkaarten.add(ovChipkaart);
