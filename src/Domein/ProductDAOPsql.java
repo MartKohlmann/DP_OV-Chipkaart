@@ -149,10 +149,6 @@ public class ProductDAOPsql implements ProductDAO {
 
             if (!nieuw.getOvChipkaartList().isEmpty()) {
                 for (OVChipkaart o : nieuw.getOvChipkaartList()) {
-//                    System.out.println("o");
-//                    System.out.println(o.getProductList());
-//                    System.out.println(nieuw.getOvChipkaartList().get(0).getProductList());
-
                     for (OVChipkaart ovChipkaart : oud) {
 //                        if (nieuw.getProduct_nummer() == p.getProduct_nummer()){
                             ArrayList<Integer> count = new ArrayList<>();
@@ -225,12 +221,6 @@ public class ProductDAOPsql implements ProductDAO {
         try {
             List<OVChipkaart> o = ovdao.findAll();
             for (OVChipkaart oud : o) {
-//                System.out.println("c");
-//                System.out.println(oud.getProductList());
-//                System.out.println(nieuw);
-//                System.out.println("d");
-//                System.out.println(nieuw.getOvChipkaartList());
-//                System.out.println(oud);
                 for (Product p : oud.getProductList()) {
                     if (p.getProduct_nummer() == nieuw.getProduct_nummer()) {
                         ArrayList<Integer> count = new ArrayList<>();
@@ -249,55 +239,9 @@ public class ProductDAOPsql implements ProductDAO {
                         }
                     }
                 }
-//                if (oud.getProductList().contains(nieuw) && !nieuw.getOvChipkaartList().contains(oud)){
-//                    oud.verwijderProduct(nieuw);
-//
-//                }
+
             }
 
-//            List<Product> db = findAll();
-//            for (Product oud : db) {
-//                if (nieuw.getProduct_nummer() == oud.getProduct_nummer()){
-//                    if (!oud.getOvChipkaartList().isEmpty()) {
-//                        for (OVChipkaart ovOud : oud.getOvChipkaartList()) {
-//                            if (!nieuw.getOvChipkaartList().contains(ovOud)){
-//                                System.out.println("deleteOld");
-//                                System.out.println("oud");
-//                                System.out.println(oud.getOvChipkaartList());
-//                                System.out.println("nieuw");
-//                                System.out.println(nieuw.getOvChipkaartList());
-//                                System.out.println(ovOud.getProductList());
-////                                ovChipkaart.updateProduct(nieuw);
-//                                PreparedStatement pss = connection.prepareStatement("DELETE FROM ov_chipkaart_product  WHERE kaart_nummer = ? AND product_nummer = ?");
-//                                pss.setInt(1, ovOud.getKaartnummer());
-//                                pss.setInt(2, nieuw.getProduct_nummer());
-//                                pss.executeUpdate();
-//                                pss.close();
-//                            }
-//
-//                        }
-//                    }
-//                }
-//                for (OVChipkaart ovChipkaart : nieuw.getOvChipkaartList()) {
-//                    if (!ovChipkaart.getProductList().contains(oud) && nieuw.getProduct_nummer() == oud.getProduct_nummer()) {
-//                        System.out.println("deleteOld");
-//                        System.out.println("oud");
-//                        System.out.println(oud.getOvChipkaartList());
-//                        System.out.println("nieuw");
-//                        System.out.println(nieuw.getOvChipkaartList());
-//                        System.out.println(!ovChipkaart.getProductList().contains(oud));
-//                        System.out.println(ovChipkaart.getProductList());
-//                        ovChipkaart.updateProduct(nieuw);
-//                        PreparedStatement pss = connection.prepareStatement("DELETE FROM ov_chipkaart_product  WHERE kaart_nummer = ? AND product_nummer = ?");
-//                        pss.setInt(1, ovChipkaart.getKaartnummer());
-//                        pss.setInt(2, nieuw.getProduct_nummer());
-//                        pss.executeUpdate();
-//                        pss.close();
-//                        ovdao.update(ovChipkaart);
-//                    }
-//                }
-
-//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

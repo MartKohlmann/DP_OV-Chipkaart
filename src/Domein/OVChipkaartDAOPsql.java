@@ -59,7 +59,6 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
             st.setInt(4, ovChipkaart.getReizigerId());
             st.setInt(5, ovChipkaart.getKaartnummer());
             ovChipkaart.setReiziger(rdao.findById(ovChipkaart.getReizigerId()));
-            System.out.println("ovchip");
             if (!ovChipkaart.getProductList().isEmpty()) {
                 for (Product p : ovChipkaart.getProductList()) {
                     if (!p.getOvChipkaartList().contains(ovChipkaart)) {
@@ -74,25 +73,7 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
                 }
             }
 
-            System.out.println(ovChipkaart.getProductList());
-//            ovChipkaart.setProductList(ovChipkaart.getProductList());
-//            System.out.println("product list");
-//            System.out.println(ovChipkaart.getProductList());
-//            if (!ovChipkaart.getProductList().isEmpty()){
-//                for (Product product : ovChipkaart.getProductList()){
-//                    if (!product.getOvChipkaartList().isEmpty()){
-//                        for (OVChipkaart ov : product.getOvChipkaartList()){
-//
-//                            if (ov.getKaartnummer() == ovChipkaart.getKaartnummer()) {
-//                                product.updateOVChipkaart(ovChipkaart);
-//                            }
-//                        }
-//                    }
-//                    else {
-//                        product.voegOVChipkaartToe(ovChipkaart);
-//                    }
-//                }
-//            }
+
             st.executeUpdate();
             st.close();
             return true;
@@ -154,10 +135,7 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
 
                     ovChipkaart.voegProductToe(p);
                 }
-//                if (ovChipkaart.getKaartnummer() == 69696) {
-//                    System.out.println("aaa");
-//                    System.out.println(ovChipkaart.getProductList());
-//                }
+
                 ovchipkaarten.add(ovChipkaart);
             }
             myRs.close();
