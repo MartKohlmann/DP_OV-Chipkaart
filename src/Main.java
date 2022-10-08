@@ -170,18 +170,25 @@ public class Main {
         Product a4 = new Product(10, "Weekkaart", "Week kaart reizen", 30.00);
         Product a5 = new Product(11, "Dagkaart", "Dag kaart reizen", 10.00);
         OVChipkaart ov3 = new OVChipkaart(69696, java.sql.Date.valueOf("2022-07-08"), 1, 50.00, 99);
+        OVChipkaart ov4 = new OVChipkaart(112233, java.sql.Date.valueOf("2021-06-08"), 1, 70.00, 99);
+
         String gbdatum = "1981-03-14";
         Reiziger a1 = new Reiziger(99, "B", "", "GIETS", java.sql.Date.valueOf(gbdatum));
+//        Reiziger a11 = new Reiziger(100, "B", "", "GIETSers", java.sql.Date.valueOf(gbdatum));
         Adres a10 = new Adres(80, "1294GZ", "19", "Jan de KORTE Laan", "UTRECHTEN", 99);
+//        Adres a12 = new Adres(81, "1290KZ", "12", "Jan de KLEINE Laan", "UTRECHTEN", 100);
         List<OVChipkaart> ovChipkaartList = new ArrayList<>();
         ovChipkaartList.add(ov3);
+        ovChipkaartList.add(ov4);
         a1.setOvChipkaarten(ovChipkaartList);
         a1.setAdres(a10);
         a10.setReiziger(a1);
         ov3.setReiziger(a1);
+        ov4.setReiziger(a1);
         rdao.save(a1);
         adao.save(a10);
         ovdao.save(ov3);
+        ovdao.save(ov4);
 
         productDAOPsql.save(a2);
         productDAOPsql.save(a4);
@@ -211,11 +218,35 @@ public class Main {
 
         System.out.println("Product 8 voor het updaten van de prijs: ");
         System.out.println(a2);
-        Product a7 = new Product(8, "Studentenkaart", "Door de weeks gratis reizen", 25.00);
-        productDAOPsql.update(a7);
+//        Product a7 = new Product(8, "Studentenkaart", "Door de weeks gratis reizen", 25.00);
+        a2.setPrijs(25.00);
+        productDAOPsql.update(a2);
         System.out.println("Alle producten na het updaten van product 8 (product 8 heeft nu een andere prijs)");
         for (Product p : productDAOPsql.findAll()) {
             System.out.println(p);
+        }
+        System.out.println("Product 8 voor het toevoegen van 1 extra chipkaart");
+        System.out.println(a2);
+        System.out.println();
+        System.out.println("Product 8 na het toevoegen van 1 extra chipkaart");
+
+        a2.voegOVChipkaartToe(ov4);
+        System.out.println(a2);
+        System.out.println();
+        productDAOPsql.update(a2);
+        System.out.println("Alle producten na het updaten van product 8 (product 8 heeft nu 2 chipkaarten)");
+        for (Product p : productDAOPsql.findAll()) {
+            System.out.println(p);
+        }
+        System.out.println();
+        System.out.println("ALle producten na het verwijderen van een chipkaart");
+//        Product a20 = new Product(8, "Studentenkaart", "Door de weeks gratis reizen", 35.00);
+//        a20.voegOVChipkaartToe(ov3);
+//        productDAOPsql.update(a20);
+        a2.verwijderOVChipkaart(ov3);
+        productDAOPsql.update(a2);
+        for (Product ppp : productDAOPsql.findAll()) {
+            System.out.println(ppp);
         }
         System.out.println();
         System.out.println("Alle producten voor het verwijderen van product 8: ");
@@ -224,7 +255,7 @@ public class Main {
         }
         System.out.println();
         System.out.println("Alle producten na het verwijderen van product 8: ");
-        productDAOPsql.delete(a7);
+        productDAOPsql.delete(a2);
         for (Product p : productDAOPsql.findAll()) {
             System.out.println(p);
         }
