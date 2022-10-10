@@ -221,6 +221,7 @@ public class ProductDAOPsql implements ProductDAO {
         try {
             List<OVChipkaart> o = ovdao.findAll();
             for (OVChipkaart oud : o) {
+                List<Product> deletebaar = new ArrayList<>();
                 for (Product p : oud.getProductList()) {
                     if (p.getProduct_nummer() == nieuw.getProduct_nummer()) {
                         ArrayList<Integer> count = new ArrayList<>();
@@ -228,7 +229,7 @@ public class ProductDAOPsql implements ProductDAO {
                             count.add(ov.getKaartnummer());
                         }
                         if (!count.contains(oud.getKaartnummer())) {
-                            oud.verwijderProduct(p);
+                            deletebaar.add(p);
                             PreparedStatement pss = connection.prepareStatement("DELETE FROM ov_chipkaart_product WHERE kaart_nummer = ? AND product_nummer = ?");
                             pss.setInt(1, oud.getKaartnummer());
                             pss.setInt(2, nieuw.getProduct_nummer());
@@ -238,6 +239,10 @@ public class ProductDAOPsql implements ProductDAO {
 
                         }
                     }
+                }
+
+                for (int i = 0; i < deletebaar.size(); i++) {
+                    deletebaar.get(i).verwijderOVChipkaart(oud);
                 }
 
             }
