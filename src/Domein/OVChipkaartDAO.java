@@ -8,5 +8,6 @@ public interface OVChipkaartDAO {
     public boolean delete(OVChipkaart ovChipkaart);
     public OVChipkaart findById(int id);
     public List<OVChipkaart> findAll();
+    public List<OVChipkaart> findByProduct(Product product);
 
 }

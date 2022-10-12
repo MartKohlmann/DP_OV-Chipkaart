@@ -15,22 +15,7 @@ public class ReizigerDAOPsql implements ReizigerDAO{
     }
     public boolean save(Reiziger reiziger){
         try {
-            Statement myStmt = connection.createStatement();
-            ResultSet myRs = myStmt.executeQuery("select reiziger_id from reiziger");
-//            ResultSet myRss = myStmt.executeQuery("select * from adres");
-//            while (myRs.next()) {
-////                if (Integer.parseInt(myRs.getString("reiziger_id")) ==  Integer.parseInt(myRss.getString("reiziger_id"))){
-////                    reiziger.setAdres()
-////                }
-////                Adres adres = adao.findByReiziger(reiziger.getId());
-////                reiziger.setAdres(adres);
-//
-//            }
-            while (myRs.next()) {
-                if (reiziger.getId() == myRs.getInt("reiziger_id")) {
-                    return false;
-                }
-            }
+
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO reiziger (reiziger_id, voorletters, tussenvoegsel, achternaam, geboortedatum) VALUES (?, ?, ?, ?, ?)");
             preparedStatement.setInt(1, reiziger.getId());
             preparedStatement.setString(2, reiziger.getVoorletters());
@@ -41,8 +26,9 @@ public class ReizigerDAOPsql implements ReizigerDAO{
             if (reiziger.getAdres() != null) {
                 adao.save(reiziger.getAdres());
             }
-            myRs.close();
-            myStmt.close();
+            for (OVChipkaart ovChipkaart : reiziger.getOvChipkaarten()) {
+                ovdao.save(ovChipkaart);
+            }
             preparedStatement.close();
             return true;
         } catch (Exception e){
@@ -60,6 +46,13 @@ public class ReizigerDAOPsql implements ReizigerDAO{
             st.setInt(5, reiziger.getId());
             if (reiziger.getAdres() != null) {
                 adao.update(reiziger.getAdres());
+            }
+            for (OVChipkaart ovChipkaart : reiziger.getOvChipkaarten()) {
+                if (ovChipkaart.getReizigerId() == reiziger.getId()) {
+                    ovChipkaart.setReiziger(reiziger);
+                    ovdao.update(ovChipkaart);
+                    break;
+                }
             }
 //            adao.update(reiziger.getAdres());
 //            reiziger.setAdres(reiziger.getAdres());

@@ -98,6 +98,23 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
             e.printStackTrace();
             return false;
         }    }
+    public List<OVChipkaart> findByProduct(Product product) {
+        try {
+            List<OVChipkaart> ovChipkaartList = new ArrayList<>();
+            List<Product> producten = pdao.findAll();
+            for (Product product1 : producten) {
+                if (product1.getProduct_nummer() == product.getProduct_nummer()){
+                    for (OVChipkaart ovChipkaart : product1.getOvChipkaartList()) {
+                        ovChipkaartList.add(ovChipkaart);
+                    }
+                }
+            }
+            return ovChipkaartList;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public OVChipkaart findById(int id) {
         try {
